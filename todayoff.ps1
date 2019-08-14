@@ -1,4 +1,9 @@
 ﻿
+#todays off powershell script
+# this script make a list of today's off members from excel file and post to the Teams
+# via imcoming Webhook
+# Version 10.0
+
 # debug flag
 
 if($Env:DEBUG_TODAYSOFF -eq 1)  {
