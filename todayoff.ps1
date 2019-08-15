@@ -88,7 +88,7 @@ $past = [DateTime]::ParseExact("20190701","yyyyMMdd", $null)
 $today = Get-Date
 if($debugflag)  {
     #for debug purpose to override specify a date for today.
-    $today = [DateTime]::ParseExact("20190924","yyyyMMdd", $null)
+    #$today = [DateTime]::ParseExact("20190924","yyyyMMdd", $null)
 }
 
 $pastDays = $today - $past
