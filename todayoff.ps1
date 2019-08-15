@@ -88,7 +88,7 @@ $past = [DateTime]::ParseExact("20190701","yyyyMMdd", $null)
 $today = Get-Date
 if($debugflag)  {
     #for debug purpose to override specify a date for today.
-    #$today = [DateTime]::ParseExact("20190924","yyyyMMdd", $null)
+    $today = [DateTime]::ParseExact("20190819","yyyyMMdd", $null)
 }
 
 $pastDays = $today - $past
@@ -99,7 +99,7 @@ if( !( isholiday($todaysCol) ) ) {
     #Create a today and next day OOF members list and post to teams
 
     #skip holidays to find next business day.
-    for($nextdayCol = $todaysCol+1;isholiday($nextdayCol) ; $nextdayCol = $nextdayCol+1){}
+    for($nextdayCol = $todaysCol+1;isholiday($nextdayCol) ; $nextdayCol++ ){}
     
     $nextday = $today.AddDays($nextdayCol - $todaysCol)
     
@@ -172,7 +172,7 @@ if( !( isholiday($todaysCol) ) ) {
         #align name length to 8 chars to add double byte space chars
         for( ; $ucname.Length -le 8; $ucname = $ucname+"　"){}
 
-        for( $dow = $mondayCol ; $dow -le $mondayCol + 4 ; $dow = $dow+1)
+        for( $dow = $mondayCol ; $dow -le $mondayCol + 4 ; $dow++ )
         {
         $state = $exSheet.Cells.Item($memberRaw, $dow ).Text
         $state = formatState($state)
