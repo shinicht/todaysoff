@@ -15,13 +15,21 @@ $dayRaw = 5     #constant
 $memberRawStart = 1
 $numMembers = 0
 
-# debug flag
-if($Env:DEBUG_TODAYSOFF -eq 1)  {
-    $debugflag = $true
+try {
+    $config = Get-Content -Path .\config.json -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+}catch{ 
+    Write-Error( "config.json is not found")
+    exit
 }
-else {
-    $debugflag = $true
+
+if(($config.excelworkbook -eq "") -or ($config.url -eq ""))
+{
+    Out-String "config.json is not found or not configured"
+    exit
 }
+
+$debugflag = $config.Debugflag
+
 
 
 function isholiday($daycol)
@@ -71,12 +79,12 @@ function formatState( $term )
 if($debugflag)  {
     # for testing purpose
     out-host -InputObject "Debug mode"
-    $uri = "https://outlook.office.com/webhook/5b59c0eb-7c38-4749-b866-7665ce4ddb68@72f988bf-86f1-41af-91ab-2d7cd011db47/IncomingWebhook/88c4784a9992461c8feb28d8de967cf5/f27e8b14-e89d-4a23-ba91-6f6556bb4d79"
+    $uri = $config.url
 }
 else {    
     #for お休みチャンネル
     Out-Host -InputObject "Release Mode"
-    $uri = "https://outlook.office.com/webhook/ed8b025d-1eb0-4940-8ae9-960a6669515f@72f988bf-86f1-41af-91ab-2d7cd011db47/IncomingWebhook/ac4ef01f403f468d973f1b8b85f3786e/f27e8b14-e89d-4a23-ba91-6f6556bb4d79"
+    $uri = $config.url
 }
 
 
@@ -84,8 +92,8 @@ else {
 
 $excel = New-Object -ComObject Excel.Application
 $excel.Visible = $true
-$book = $excel.Workbooks.Open("https://microsoft.sharepoint.com/teams/SfBDailyCaseAssign/Shared%20Documents/%E3%81%8A%E4%BC%91%E3%81%BF%20Request%20%E3%83%81%E3%83%A3%E3%83%8D%E3%83%AB%20-%20%E9%81%8B%E7%94%A8%E5%89%8D/Schedule_UC_FY20.xlsx")
-$exSheet = $book.Worksheets.Item("FY20")
+$book = $excel.Workbooks.Open( $config.excelworkbook )
+$exSheet = $book.Worksheets.Item($config.excelworksheet)
 
 try{
 
